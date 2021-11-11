@@ -1,4 +1,5 @@
-﻿using CodeRepository.Repository.CategoryRepo;
+﻿using CodeRepository.Models;
+using CodeRepository.Repository.CategoryRepo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,10 +21,42 @@ namespace CodeRepository.AppForms
             _category = new CategoryRepo();
         }
 
-        private async void AddCategroy_Load(object sender, EventArgs e)
+        private void AddCategroy_Load(object sender, EventArgs e)
         {
-            var list = await _category.GetListAsync();
-            gvCategory.DataSource = list;
+           lblValAddCategory.Visible = false;
+        }
+
+        private void btnAddCategory_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (string.IsNullOrEmpty(txtAddCategory.Text))
+                {
+                    lblValAddCategory.Visible = true;
+                }
+                else
+                {
+                    Category category = new Category
+                    {
+                        Name = txtAddCategory.Text
+                    };
+
+                    _category.Create(category);
+                    txtAddCategory.ResetText();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    MessageBox.Show(ex.InnerException.Message);
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
     }
 }

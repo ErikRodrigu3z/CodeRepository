@@ -20,8 +20,7 @@ namespace CodeRepository.AppForms
         private void btnAccept_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Main main = new Main();
-            main.WindowState = FormWindowState.Maximized;
+            Main main = new Main();            
             main.Show();
         }
 

@@ -10,7 +10,7 @@ namespace CodeRepository.Repository
 {
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        private DBContext _db;
+        private DBContext _db;        
         public RepositoryBase()
         {
             _db = new DBContext();
@@ -18,14 +18,14 @@ namespace CodeRepository.Repository
 
         #region Getters
 
-        public IQueryable<T> FindAll()
+        public List<T> FindAll()
         {
-            return _db.Set<T>().AsNoTracking();
+            return _db.Set<T>().AsNoTracking().ToList();
         }
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        public List<T> FindByCondition(Expression<Func<T, bool>> expression)
         {
-            return _db.Set<T>().Where(expression).AsNoTracking();
+            return _db.Set<T>().Where(expression).AsNoTracking().ToList();
         }
 
         public async Task<List<T>> GetListAsync()
@@ -38,6 +38,10 @@ namespace CodeRepository.Repository
             return await _db.Set<T>().AsNoTracking().ToListAsync();
         }
 
+        public T GetById(object id)
+        {
+            return _db.Set<T>().Find(id);
+        }
         #endregion
 
         #region Create
@@ -85,8 +89,6 @@ namespace CodeRepository.Repository
             _db.Set<T>().Update(entity);
             await _db.SaveChangesAsync();
         }
-
-
         #endregion
     }
 }
