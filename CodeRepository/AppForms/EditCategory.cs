@@ -1,5 +1,6 @@
 ﻿using CodeRepository.Models;
 using CodeRepository.Repository.CategoryRepo;
+using CodeRepository.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,61 +13,57 @@ using System.Windows.Forms;
 
 namespace CodeRepository.AppForms
 {
-    public partial class AddCategroy : Form
+    public partial class EditCategory : Form
     {
         private readonly ICategoryRepo _category;
+        private Category category;  
 
         #region Delegado
         //delegado
         public delegate void RefreshCmbCategory();
         //evento
-        public event RefreshCmbCategory RefreshCmb;   
+        public event RefreshCmbCategory RefreshCmb;
         #endregion
 
-        public AddCategroy()
+        public EditCategory()
         {
             InitializeComponent();
             _category = new CategoryRepo();
         }
-
-        private void AddCategroy_Load(object sender, EventArgs e)
+        private void EditCategory_Load(object sender, EventArgs e)
         {
-           lblValAddCategory.Visible = false;
+            lblValAddCategory.Visible = false;
+            category = _category.GetById(SD.IdCategory);
+            txtEditCategory.Text = category.Name;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveCategory();
+            UpdateCategory();
         }
 
-        private void txtAddCategory_KeyPress(object sender, KeyPressEventArgs e)
+        private void txtEditCategory_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                SaveCategory();
-            }
+                UpdateCategory();
+            }            
         }
 
         #region Save Category
-        public void SaveCategory()
+        public void UpdateCategory() 
         {
             try
             {
-
-                if (string.IsNullOrEmpty(txtAddCategory.Text))
+                if (string.IsNullOrEmpty(txtEditCategory.Text))
                 {
                     lblValAddCategory.Visible = true;
                 }
                 else
                 {
-                    Category category = new Category
-                    {
-                        Name = txtAddCategory.Text
-                    };
-
-                    _category.Create(category);
-                    txtAddCategory.ResetText();
-
+                    category.Name = txtEditCategory.Text;
+                    _category.Update(category);
+                    txtEditCategory.ResetText();
                     //refresh combo box category of form main
                     this.RefreshCmb();
                     lblValAddCategory.Visible = false;
@@ -85,6 +82,7 @@ namespace CodeRepository.AppForms
             }
         }
         #endregion
+
 
     }
 }

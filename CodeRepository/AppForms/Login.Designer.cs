@@ -100,6 +100,7 @@
             this.Controls.Add(this.txtUser);
             this.Controls.Add(this.btnAccept);
             this.Name = "Login";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
             this.Load += new System.EventHandler(this.Login_Load);
             this.ResumeLayout(false);
